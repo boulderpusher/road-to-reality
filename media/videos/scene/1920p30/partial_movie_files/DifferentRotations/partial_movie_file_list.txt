@@ -1,0 +1,3 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/ben/code/road-to-reality/media/videos/scene/1920p30/partial_movie_files/DifferentRotations/4055674294_69609516_937106607.mp4'
+file 'file:/home/ben/code/road-to-reality/media/videos/scene/1920p30/partial_movie_files/DifferentRotations/3014428142_2834709167_1258736004.mp4'
