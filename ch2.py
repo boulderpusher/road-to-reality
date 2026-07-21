@@ -33,7 +33,7 @@ class PythagoreanTheorem(Scene):
         )
         self.play(Write(label_formula))
 
-# Figure 2.2
+# Figure 2.2 - 2.4
 class Tesselation(Scene):
     def construct(self):
         # Figure 2.2
@@ -54,4 +54,10 @@ class Tesselation(Scene):
 
         # Figure 2.4
         self.play(lines.animate.shift((DOWN + LEFT) * 0.5))
-        it = Intersection()
+
+# Figure 2.5
+class TiltedSquare(Scene):
+    def construct(self):
+        big_square = Square(1)
+        small_square = Square(0.5).shift(UP * 0.75 + RIGHT * 0.25)
+        self.play(AnimationGroup([Create(big_square), Create(small_square)]))
