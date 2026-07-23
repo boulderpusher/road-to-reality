@@ -90,7 +90,8 @@ class Tesselation(Scene):
         b = Line(lower_right, pts[3], color="blue", stroke_width=8)
         self.play(AnimationGroup(Create(a), Create(b), Create(c)))
 
-class Squares(Scene):
+# Figure 2.6
+class Lattice(Scene):
     def construct(self):
         l = 0.5
         squares = [[Square(l)]]
@@ -106,3 +107,79 @@ class Squares(Scene):
                                   for edge_squares in squares],
                                   lag_ratio=0.1,
                                   run_time=3))
+        self.play(AnimationGroup([FadeOut(*edge_squares)
+                                  for edge_squares in squares[::-1]],
+                                  lag_ratio=0.1,
+                                  run_time=3))
+
+# Figure 2.7
+class SquareConstruction(Scene):
+    def construct(self):
+        base_line = Line(LEFT + DOWN, RIGHT + DOWN)
+        self.play(FadeIn(base_line))
+
+        left_line = base_line.copy()
+        right_line = base_line.copy()
+
+        bottom_left = base_line.get_start()
+        bottom_right = base_line.get_end()
+        
+        self.play(
+            Rotate(left_line, PI/2, about_point=bottom_left),
+            Rotate(right_line, -PI/2, about_point=bottom_right)
+        )
+
+        self.play(
+            Create(RightAngle(left_line, base_line, length=0.2)),
+            Create(RightAngle(right_line, base_line, quadrant=(-1,-1), length=0.2))
+        )
+
+        top_left = left_line.get_end()
+        top_right = right_line.get_start()
+        left_half = Line(top_left, midpoint(top_left, top_right), color="red")
+        right_half = Line(top_right, midpoint(top_left, top_right), color="red")
+
+        self.play(
+            Create(left_half),
+            Create(right_half)
+        )
+
+        self.play(
+            Create(Angle(left_half, left_line, color="red", quadrant=(1,-1), other_angle=True, radius=0.2)),
+            Create(Angle(right_half, right_line, color="red", radius=0.2))
+        )
+
+# Figure 2.8
+class ParallelPostulate(Scene):
+    def construct(self):
+        m_a = -1/6
+        m_b = 1/18
+        a = Line(LEFT * 3 + UP/2, ORIGIN)
+        b = Line(LEFT * 3 + DOWN/2, DOWN * 1/3)
+        c = Line(LEFT * 2.5 + UP, LEFT * 2 + DOWN, color="blue")
+
+        self.play(Create(a), Create(b))
+        self.play(Create(c))
+        angle_a = Angle(a, c, other_angle=True, radius=0.2, color="blue")
+        angle_b = Angle(b, c, quadrant=(1, -1), radius=0.2, color="blue")
+        self.play(
+            Create(angle_a), 
+            Create(angle_b)
+        )
+
+        a_ext = DashedLine(a.get_end(), a.get_end() + RIGHT * 3 + UP * m_a * 3, color="green")
+        b_ext = DashedLine(b.get_end(), b.get_end() + RIGHT * 3 + UP * m_b * 3, color="green")
+        self.play(Create(a_ext), Create(b_ext))
+        b_over = Line(b_ext.get_start(), b_ext.get_end())
+        self.play(Create(b_over), *map(FadeOut, [a, c, angle_a, angle_b, a_ext]))
+        l = Line(b.get_start(), b_over.get_end())
+        self.add(l)
+        self.remove(b)
+        self.remove(b_ext)
+        p = Circle(radius=0.05, color="red", fill_color="red").shift(l.get_midpoint() + UP / 2)
+        p.set_fill(RED, opacity=1)
+        self.play(Create(p))
+        parallel = l.copy()
+        parallel.set_color("green")
+        self.play(parallel.animate.shift(UP / 2))
+        
